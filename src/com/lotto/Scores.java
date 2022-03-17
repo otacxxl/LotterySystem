@@ -2,7 +2,9 @@ package com.lotto;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /*
@@ -19,12 +21,21 @@ public class Scores {
     private List<String> listOfFilesToCheck;
     //instance of file manager passed by constructor
     private final FileManager fileManagerInstance;
+    //use this Map to track winnings
+    private Map<Winnings, Integer> calculatedWinnings = new HashMap<Winnings, Integer>();
+
 
     //Scores constructor
     //@params instance of file manager and ticked generated when we type "pocni izvlacenje"
     public Scores(FileManager fileManagerInstance, ArrayList<Integer> ticket) throws IOException {
         this.ticket = ticket;
         this.fileManagerInstance = fileManagerInstance;
+
+        //initialize calculated winnings to all zeros
+        calculatedWinnings.put(Winnings.PETICA, 0);
+        calculatedWinnings.put(Winnings.CETVORKA, 0);
+        calculatedWinnings.put(Winnings.TROJKA, 0);
+
         //we first detect all files on file system that contains lottery tickets
         getAllTicketFilesFromFileSystem();
         //then we read all lottery numbers from file and store them to generatedTickets
@@ -62,23 +73,36 @@ public class Scores {
         AtomicInteger matches = new AtomicInteger();
         //run through all tickets
         generatedTickets.forEach(ticketFromFileSystem -> {
+            matches.set(0);
             //see if the user entry exists in the lottery, if so, we ave a match
             for (int i = 0; i < ticketFromFileSystem.size(); ++i) {
-                matches.set(0);
                     if (numberInArray(ticketFromFileSystem.get(i), ticket)) {
                         matches.incrementAndGet();
                     }
             }
             if(matches.get() == 5) {
-                System.out.println("Tiket " + ticketFromFileSystem.toString() + " je JACKPOT! Pogodjeni svi brojevi (petica)!");
+                increment(calculatedWinnings, Winnings.PETICA);
+                //System.out.println("Tiket " + ticketFromFileSystem.toString() + " je JACKPOT! Pogodjeni svi brojevi (petica)!");
             }else if(matches.get() == 4){
-                System.out.println("Tiket " + ticketFromFileSystem.toString() + " je dobitak druge vrste. Pogodjena 4 izvucena broja!");
+                increment(calculatedWinnings, Winnings.CETVORKA);
+                //System.out.println("Tiket " + ticketFromFileSystem.toString() + " je dobitak druge vrste. Pogodjena 4 izvucena broja!");
             }else if(matches.get() == 3){
-                System.out.println("Tiket " + ticketFromFileSystem.toString() + " je trece vrste. Pogodjena 3 izvucena broja!");
-            }else{
-                System.out.println("Tiket " + ticketFromFileSystem.toString() + " ima " + matches + " pogodaka.");
+                increment(calculatedWinnings, Winnings.TROJKA);
+                //System.out.println("Tiket " + ticketFromFileSystem.toString() + " je trece vrste. Pogodjena 3 izvucena broja!");
             }
         });
+    }
+
+    //Function used to print scores
+    void printScores(){
+        calculatedWinnings.forEach((key, value) -> System.out.println(key + ":" + value));
+    }
+
+    //This function is used to increment winning scores based on lottery ticket match
+    public static<K> void increment(Map<K, Integer> map, K key)
+    {
+        //map.putIfAbsent(key, 0);
+        map.put(key, map.get(key) + 1);
     }
 
     //This is helper function used to compare how many numbers are the same in two lottery tickets

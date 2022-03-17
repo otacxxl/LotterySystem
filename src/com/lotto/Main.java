@@ -46,6 +46,7 @@ public class Main {
                     //pass ticket to class Scores
                     Scores scores = new Scores(fileManager, lotteryNumbers.numbers());
                     scores.checkScores();
+                    scores.printScores();
                 }else{
                     System.out.println("Morate imate minimalno 3 generisana listica prije nego pocnete sa izvlacenjem. Trenutno imate " + numOfTickets + " generisanih listica!");
                 }
