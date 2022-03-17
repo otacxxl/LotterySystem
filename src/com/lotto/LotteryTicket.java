@@ -1,8 +1,14 @@
 package com.lotto;
 
+import org.w3c.dom.ls.LSOutput;
+
 import java.util.ArrayList;
 import java.util.Random;
 
+/*
+    Lottery Ticket model class. This class is used to generate ArrayList of 5 random numbers
+    that represent single lottery ticket.
+*/
 public class LotteryTicket {
     private ArrayList<Integer> numbers;
     private Random random = new Random();
@@ -10,15 +16,17 @@ public class LotteryTicket {
     private final int MIN_LOTTERY_NUMBER = 1;
     private final int lotteryLength = 5;
 
+    //Empty class constructor
     public LotteryTicket() {
-        // Draw numbers as LotteryNumbers is created
-        this.drawNumbers();
     }
 
+    //This function returns ArrayList of numbers that represent single lottery ticket [32, 12, 15, 1, 13]
+    //@response lottery ticket
     public ArrayList<Integer> numbers() {
         return this.numbers;
     }
 
+    //This function generates single lottery ticket  [32, 12, 15, 1, 13]
     public void drawNumbers() {
         // We'll format a list for the numbers
         this.numbers = new ArrayList<>();
@@ -27,6 +35,7 @@ public class LotteryTicket {
         int lottery = 0;
         while (i < lotteryLength) {
             lottery = random.nextInt(MAX_LOTTERY_NUMBER - MIN_LOTTERY_NUMBER + 1) + MIN_LOTTERY_NUMBER;
+            //add lottery number to arraylist if is not already added
             if (!this.numbers.contains(lottery)) {
                 this.numbers.add(lottery);
                 i++;
@@ -34,12 +43,7 @@ public class LotteryTicket {
         }
     }
 
-    public boolean containsNumber(int number) {
-        // Test here if the number is already in the drawn numbers
-        return this.numbers.contains(number);
-
-    }
-
+    //Override toString function used to print lottery tickets using System.out.println
     @Override
     public String toString() {
         return "LotteryTicket{" +
