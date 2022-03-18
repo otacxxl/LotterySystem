@@ -12,8 +12,6 @@ public class Main {
         LotteryTicket lotteryNumbers = new LotteryTicket();
         ArrayList<Integer> numbers;
 
-        // see how many match
-        int matches = 0;
         // number of generated tickets
         int numOfTickets = 0;
 
