@@ -34,7 +34,8 @@ public class LotteryTicket {
         int i = 0;
         int lottery = 0;
         while (i < lotteryLength) {
-            lottery = random.nextInt(MAX_LOTTERY_NUMBER - MIN_LOTTERY_NUMBER + 1) + MIN_LOTTERY_NUMBER;
+            //lottery = random.nextInt(MAX_LOTTERY_NUMBER - MIN_LOTTERY_NUMBER + 1) + MIN_LOTTERY_NUMBER; //before Java 8
+            lottery = random.ints(MIN_LOTTERY_NUMBER, (MAX_LOTTERY_NUMBER + 1)).limit(1).findFirst().getAsInt(); //Java 8
             //add lottery number to arraylist if is not already added
             if (!this.numbers.contains(lottery)) {
                 this.numbers.add(lottery);
